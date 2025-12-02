@@ -1,0 +1,379 @@
+{
+	"info": {
+		"_postman_id": "cpt-analyzer-id",
+		"name": "CPT Analyzer API",
+		"description": "Collection for testing the CPT Code Analytical Utility App API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Providers",
+			"item": [
+				{
+					"name": "Get All Providers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Providers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Providers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Provider by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Providers/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Providers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Provider",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Gregory\",\n  \"lastName\": \"House\",\n  \"addrss\": \"221B Baker St\",\n  \"specialty\": \"Diagnostic Medicine\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Providers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Providers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Provider",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"providerID\": 1,\n  \"firstName\": \"Gregory\",\n  \"lastName\": \"House\",\n  \"addrss\": \"Princeton-Plainsboro Hospital\",\n  \"specialty\": \"Nephrology\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Providers/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Providers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Provider",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Providers/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Providers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clinic Services",
+			"item": [
+				{
+					"name": "Get All Services",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ClinicServices",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"ClinicServices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Service",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"serviceName\": \"Comprehensive Eye Exam\",\n  \"fee\": 150.00,\n  \"cptCode\": \"92004\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/ClinicServices",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"ClinicServices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Service",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/ClinicServices/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"ClinicServices",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Billed Events",
+			"item": [
+				{
+					"name": "Get All Billed Events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/BilledEvents",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"BilledEvents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log Billed Event",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"serviceID\": 1,\n  \"providerID\": 1,\n  \"dateOfService\": \"2024-12-01T09:00:00\",\n  \"billedAmount\": 150.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/BilledEvents",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"BilledEvents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Event",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/BilledEvents/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"BilledEvents",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Analytics (Phase 2)",
+			"item": [
+				{
+					"name": "Trend Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Analytics/trends?startDate=2024-01-01&endDate=2024-12-31",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Analytics",
+								"trends"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-12-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Service Suggestions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Analytics/suggestions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Analytics",
+								"suggestions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CPT Codes",
+			"item": [
+				{
+					"name": "Get All CPT Codes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/CptCodes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"CptCodes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create CPT Code",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cptCode\": \"92004\",\n  \"descript\": \"Ophthalmological services: medical examination and evaluation\",\n  \"category\": \"Evaluation\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/CptCodes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"CptCodes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://localhost:7111",
+			"type": "string"
+		}
+	]
+}
