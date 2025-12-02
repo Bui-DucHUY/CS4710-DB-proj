@@ -44,6 +44,23 @@ namespace APIs.Controllers
             return Ok(service);
         }
 
+        // NEW: Update Service
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, ClinicService service)
+        {
+            if (id != service.ServiceID) return BadRequest();
+
+            using var connection = GetConnection();
+            await connection.OpenAsync();
+            var sql = @"
+                UPDATE Clinic_Services 
+                SET ServiceName = @ServiceName, Fee = @Fee, CPTCode = @CPTCode
+                WHERE ServiceID = @ServiceID";
+
+            await connection.ExecuteAsync(sql, service);
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

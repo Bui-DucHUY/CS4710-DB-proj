@@ -26,7 +26,7 @@ namespace APIs.Controllers
         {
             using var connection = GetConnection();
             await connection.OpenAsync();
-            return Ok(await connection.QueryAsync<BilledEvent>("SELECT * FROM Billed_Events"));
+            return Ok(await connection.QueryAsync<BilledEvent>("SELECT * FROM Billed_Events ORDER BY DateOfService DESC"));
         }
 
         [HttpPost]
@@ -42,6 +42,23 @@ namespace APIs.Controllers
             var id = await connection.ExecuteScalarAsync<int>(sql, billedEvent);
             billedEvent.EventID = id;
             return Ok(billedEvent);
+        }
+
+        // NEW: Update Event
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, BilledEvent billedEvent)
+        {
+            if (id != billedEvent.EventID) return BadRequest();
+
+            using var connection = GetConnection();
+            await connection.OpenAsync();
+            var sql = @"
+                UPDATE Billed_Events 
+                SET ServiceID = @ServiceID, ProviderID = @ProviderID, DateOfService = @DateOfService, BilledAmount = @BilledAmount
+                WHERE EventID = @EventID";
+
+            await connection.ExecuteAsync(sql, billedEvent);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]

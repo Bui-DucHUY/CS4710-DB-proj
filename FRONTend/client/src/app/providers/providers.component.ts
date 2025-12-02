@@ -6,19 +6,21 @@ import { ApiService } from '../services/api.service';
 @Component({
   selector: 'app-providers',
   standalone: true,
-  imports: [CommonModule, FormsModule], // Import FormsModule for input binding
+  imports: [CommonModule, FormsModule],
   templateUrl: './providers.component.html',
   styleUrl: './providers.component.css'
 })
 export class ProvidersComponent implements OnInit {
   
   providers: any[] = [];
-  
-  // Model for the "Add Provider" form
-  newProvider = {
+  filteredProviders: any[] = [];
+  searchText: string = '';
+
+  currentProvider: any = {
+    providerID: 0,
     firstName: '',
     lastName: '',
-    addrss: '', // Matches your DB Column Name
+    addrss: '',
     specialty: ''
   };
 
@@ -31,30 +33,58 @@ export class ProvidersComponent implements OnInit {
   loadProviders() {
     this.api.getProviders().subscribe((data: any[]) => {
       this.providers = data;
+      this.filterProviders(); // Initial filter to show all
     });
   }
 
-  addProvider() {
-    if (!this.newProvider.firstName || !this.newProvider.lastName) {
+  // FIXED SEARCH LOGIC
+  filterProviders() {
+    if (!this.searchText) {
+      this.filteredProviders = this.providers;
+    } else {
+      const term = this.searchText.toLowerCase().trim(); // Trim whitespace
+      
+      this.filteredProviders = this.providers.filter(p => 
+        (p.firstName && p.firstName.toLowerCase().includes(term)) || 
+        (p.lastName && p.lastName.toLowerCase().includes(term)) ||
+        (p.specialty && p.specialty.toLowerCase().includes(term)) || // Check for null!
+        (p.addrss && p.addrss.toLowerCase().includes(term))          // Search address too
+      );
+    }
+  }
+
+  editProvider(provider: any) {
+    this.currentProvider = { ...provider };
+  }
+
+  resetForm() {
+    this.currentProvider = { providerID: 0, firstName: '', lastName: '', addrss: '', specialty: '' };
+  }
+
+  saveProvider() {
+    if (!this.currentProvider.firstName || !this.currentProvider.lastName) {
       alert('Name is required!');
       return;
     }
 
-    this.api.addProvider(this.newProvider).subscribe(() => {
-      this.loadProviders(); // Refresh list
-      this.resetForm();
-    });
-  }
-
-  deleteProvider(id: number) {
-    if(confirm('Are you sure you want to delete this provider?')) {
-      this.api.deleteProvider(id).subscribe(() => {
+    if (this.currentProvider.providerID === 0) {
+      this.api.addProvider(this.currentProvider).subscribe(() => {
         this.loadProviders();
+        this.resetForm();
+      });
+    } else {
+      this.api.updateProvider(this.currentProvider.providerID, this.currentProvider).subscribe(() => {
+        this.loadProviders();
+        this.resetForm();
       });
     }
   }
 
-  resetForm() {
-    this.newProvider = { firstName: '', lastName: '', addrss: '', specialty: '' };
+  deleteProvider(id: number) {
+    if(confirm('Delete this provider?')) {
+      this.api.deleteProvider(id).subscribe(() => {
+        this.loadProviders();
+      });
+    }
   }
 }
