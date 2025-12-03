@@ -29,6 +29,41 @@ namespace APIs.Controllers
             return Ok(await connection.QueryAsync<ClinicService>("SELECT * FROM Clinic_Services"));
         }
 
+        // --- NEW: Search & Pagination ---
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] string? term = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            using var connection = GetConnection();
+            await connection.OpenAsync();
+            var offset = (page - 1) * pageSize;
+
+            // Search by Name or CPT Code
+            var sqlData = @"
+                SELECT * FROM Clinic_Services
+                WHERE (@Term IS NULL 
+                       OR ServiceName LIKE '%' + @Term + '%' 
+                       OR CPTCode LIKE '%' + @Term + '%')
+                ORDER BY ServiceName
+                OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
+
+            var sqlCount = @"
+                SELECT COUNT(*) FROM Clinic_Services
+                WHERE (@Term IS NULL 
+                       OR ServiceName LIKE '%' + @Term + '%' 
+                       OR CPTCode LIKE '%' + @Term + '%')";
+
+            var multi = await connection.QueryMultipleAsync(
+                sqlData + ";" + sqlCount,
+                new { Term = term, Offset = offset, PageSize = pageSize });
+
+            return Ok(new
+            {
+                Data = await multi.ReadAsync<ClinicService>(),
+                TotalCount = await multi.ReadFirstAsync<int>(),
+                Page = page
+            });
+        }
+
         [HttpPost]
         public async Task<ActionResult<ClinicService>> Create(ClinicService service)
         {
@@ -44,7 +79,6 @@ namespace APIs.Controllers
             return Ok(service);
         }
 
-        // NEW: Update Service
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, ClinicService service)
         {
